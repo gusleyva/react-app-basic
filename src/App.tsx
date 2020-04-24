@@ -1,41 +1,79 @@
-import React, { Component } from 'react';
-import 'reset-css'
-import NavbarScroller from './components/NavbarScroller';
+import React from 'react'
+import clsx from 'clsx'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Drawer from '@material-ui/core/Drawer'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+import { ItemsContainer } from './pages/items/ItemsContainer';
 
-const navigation = {
-  brand: { name: "Company Name", to: "/" },
-  links: [
-    { name: 'Item 1', to: '/' },
-    { name: 'Item 2', to: '/' },
-    { name: 'Item 3', to: '/' },
-    { name: 'Item 4', to: '/' },
-    { name: 'Item 5', to: '/' },
-    { name: 'Item 6', to: '/' },
-    { name: 'Item 7', to: '/' },
-    { name: 'Item 8', to: '/' }
-  ]
-};
+import AppMenu from './menu/AppMenu'
 
-class App extends Component {
-  public render() {
-    const { brand, links } = navigation;
+const PageItems = () => <ItemsContainer compiler="Hello" framework="world"/>
+const PageOrders = () => <Typography variant="h3" component="h1">Orders Page</Typography>
+const PageCustomers = () => <Typography variant="h3" component="h1">Customers Page</Typography>
+const PageReports = () => <Typography variant="h3" component="h1">Reports Page</Typography>
 
-    return (
-      <div className="App">
-        <NavbarScroller brand={brand} links={links} />
-        <div className="hello">
-          <br></br>
-          <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-          </ul>
-        </div>
-        <br></br>
-        <div> Hello! Welcome to our first React App</div>
+const App: React.FC = () => {
+  const classes = useStyles()
+
+  return (
+    <BrowserRouter>
+      <div className={clsx('App', classes.root)}>
+        <CssBaseline />
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <Typography>Basic React App</Typography>
+          <br />
+
+          <AppMenu />
+        </Drawer>
+        <main className={classes.content}>
+          <Container maxWidth="lg" className={classes.container}>
+
+            <Switch>
+              <Route path="/" exact component={PageItems} />
+              <Route path="/orders" component={PageOrders} />
+              <Route path="/customers" component={PageCustomers} />
+              <Route path="/reports" component={PageReports} />
+            </Switch>
+
+          </Container>
+        </main>
       </div>
-    );
-  }
+    </BrowserRouter>
+  )
 }
 
-export default App;
+const drawerWidth = 240
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawerPaper: {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+    background: '#535454',
+    color: '#fff',
+  },
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+}))
+
+export default App
